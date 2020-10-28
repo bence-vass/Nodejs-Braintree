@@ -6,8 +6,28 @@
 </head>
 <body>
 <div id="dropin-container"></div>
-<button id="submit-button">Request payment method</button>
+<button id="submit-button" disabled="true">Request payment method</button>
+<div id="priceGroup">
+    <input type="radio" value="5" name="price">
+    <input type="radio" value="10" name="price">
+    <input type="radio" value="15" name="price">
+
+</div>
+<button onclick="logValue()">amont log</button>
 <script>
+
+    function logValue(){
+       console.log(amount)
+    }
+
+    let amount = null
+
+    $('#priceGroup input').on('change', ()=>{
+        console.log($('#priceGroup input:checked').val())
+        amount = $('#priceGroup input:checked').val()
+        $('#submit-button').prop('disabled', false)
+    })
+
     var button = document.querySelector('#submit-button');
 
     braintree.dropin.create({
@@ -29,7 +49,7 @@
                     $.ajax({
                         type: "POST",
                         url: '/checkout/pay',
-                        data: JSON.stringify({payload: payload}),
+                        data: JSON.stringify({payload: payload, amount: amount}),
                         dataType: 'json',
                         contentType: "application/json; charset=utf-8",
                         success: data => console.log(data),

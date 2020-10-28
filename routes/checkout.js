@@ -12,11 +12,12 @@ const gateway = new braintree.BraintreeGateway({
 
 router.post('/pay', (req, res, next) => {
     const nonceFromTheClient = req.body.payload.nonce;
+    const amount = Number(req.body.amount)
     gateway.transaction.sale({
-        amount: '110.00',
+        amount: amount,
         paymentMethodNonce: nonceFromTheClient,
         options: {
-            submitForSettlement: true
+            submitForSettlement: true,
         }
     }).then((result, error) => {
         if (result) {
