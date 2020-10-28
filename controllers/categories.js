@@ -1,14 +1,13 @@
 const Category = require('../models/Category')
 
 exports.createNewCategory = (req, res, next) => {
-    console.log(req.body)
     const category = new Category({
         name: req.body.name,
     })
     category.save().then(response => {
-        console.log(response)
+
     }).catch(error => {
-        console.log(error)
+
     })
     res.status(201).json({
         message: 'Product created',
@@ -27,5 +26,20 @@ exports.listCategory = async (req, res, next) => {
             error: 'Invalid query'
         })
 
+    }
+}
+
+exports.deleteCategory = async (req, res, next) => {
+    const docId = req.body.id
+    try {
+        const response = await Category.deleteOne({_id: docId})
+        res.status(201).json({
+          response: response
+        })
+    } catch (error) {
+        res.status(501).json({
+            error: error,
+            message: 'invalid id'
+        })
     }
 }
