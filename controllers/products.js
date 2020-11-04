@@ -41,3 +41,25 @@ exports.listProduct = async (req, res, next) => {
     }
 
 }
+
+exports.updateProduct = async (req, res, next) => {
+    const docId = req.params.id
+    const newName = req.body.name
+    const newCategory = req.body.category
+    try {
+        const doc = await Product.findById(docId)
+        doc.name = newName
+        doc.category = newCategory
+        const response = await doc.save()
+
+        res.status(201).json({
+            response: response
+        })
+
+    } catch (error) {
+        res.status(501).json({
+            error: error,
+            message: 'invalid id'
+        })
+    }
+}

@@ -3,16 +3,20 @@ const Category = require('../models/Category')
 exports.createNewCategory = (req, res, next) => {
     const category = new Category({
         name: req.body.name,
+        slug: req.body.slug
     })
     category.save().then(response => {
-
+        res.status(201).json({
+            message: 'Product created',
+            category: response
+        })
     }).catch(error => {
+        res.status(201).json({
+            message: 'save error',
+            error: error
+        })
+    })
 
-    })
-    res.status(201).json({
-        message: 'Product created',
-        category: category
-    })
 }
 
 exports.listCategory = async (req, res, next) => {
@@ -42,4 +46,28 @@ exports.deleteCategory = async (req, res, next) => {
             message: 'invalid id'
         })
     }
+}
+
+exports.updateCategory = async (req, res, next) => {
+    const docId = req.params.id
+    const newName = req.body.name
+    const newSlug = req.body.slug
+    Category.findByIdAndUpdate(docId, {
+        name: newName,
+        slug: newSlug
+    }, { new: true, omitUndefined: true },(error, result) => {
+        if(error){
+            res.status(501).json({
+                error: error,
+                message: 'update error'
+            })
+        } else {
+            res.status(201).json({
+                response: result
+            })
+        }
+    })
+
+
+
 }

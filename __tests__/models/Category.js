@@ -2,11 +2,28 @@ const supertest = require('supertest');
 const mongoose = require('mongoose')
 const app = require('../../app')
 const request = supertest(app)
+require('dotenv').config({path: '.env.development'})
+const uri =
+    'mongodb+srv://' +
+    process.env.MONGO_ATLAS_USER +
+    ':' +
+    process.env.MONGO_ATLAS_PW +
+    '@cluster0.mboj5.mongodb.net/' +
+    //process.env.MONGO_ATLAS_CLUSTER +
+    'test001' +
+    '?retryWrites=true&w=majority'
 
 let testDocId
 
-describe('Model: Category', () => {
-    beforeAll(done => {
+describe('API Test -- Model: Category', () => {
+    beforeAll(async done => {
+        await mongoose.connection.close()
+        await mongoose.connect(uri ,
+            {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            }
+        )
         done()
     })
     afterAll(done => {

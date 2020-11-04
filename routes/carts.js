@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose')
 
-const categoryController = require('../controllers/categories')
+const cartController = require('../controllers/carts')
 
-router.post('/add', categoryController.createNewCategory)
-router.get('/list', categoryController.listCategory)
+router.post('/add', cartController.createNewCart)
+router.get('/list', cartController.listCart)
+//router.patch('/update', cartController)
+//router.get('/list', categoryController.listCategory)
 
 module.exports = router
