@@ -11,7 +11,7 @@ exports.createNewCategory = (req, res, next) => {
             category: response
         })
     }).catch(error => {
-        res.status(201).json({
+        res.status(502).json({
             message: 'save error',
             error: error
         })
@@ -34,7 +34,7 @@ exports.listCategory = async (req, res, next) => {
 }
 
 exports.deleteCategory = async (req, res, next) => {
-    const docId = req.body.id
+    const docId = req.params.id
     try {
         const response = await Category.deleteOne({_id: docId})
         res.status(201).json({
@@ -67,7 +67,19 @@ exports.updateCategory = async (req, res, next) => {
             })
         }
     })
+}
 
+exports.getByIdCategory = async (req, res, next) => {
+    const docId = req.params.id
+    try {
+        const doc = await Category.findById(docId).exec()
+        res.status(200).json(doc)
+    } catch (error) {
+        res.status(501).json({
+            error: error,
+            message: 'invalid id'
+        })
+    }
 
 
 }

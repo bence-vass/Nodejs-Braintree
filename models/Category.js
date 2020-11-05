@@ -11,7 +11,7 @@ categorySchema.post('save', (error, res, next) => {
     if (error.name === 'MongoError' && error.code === 11000) {
         next({
             error,
-            message: 'slug must be unique \n define one or give it another name'
+            message: 'slug must be unique'
         });
     } else {
         next(error);
