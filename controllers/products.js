@@ -9,19 +9,23 @@ exports.createNewProduct = (req, res, next) => {
         category: req.body.category,
     })
     product.save().then(response => {
-        console.log(response)
+        res.status(201).json({
+            message: 'Product created',
+            product: product
+        })
     }).catch(error => {
-        console.log(error)
+        res.status(502).json({
+            message: 'save error',
+            error: error
+        })
     })
-    res.status(201).json({
-        message: 'Product created',
-        product: product
-    })
+
 }
 
 exports.listProduct = async (req, res, next) => {
     try {
         const productQuery = await Product.find({}).populate('category').exec()
+        /*
         const productList = productQuery.map((e, i) => {
             return {
                 id: e.id,
@@ -31,7 +35,8 @@ exports.listProduct = async (req, res, next) => {
                 category: e.category ? e.category.name : 'Unknown'
             }
         })
-        res.status(201).json(productList)
+        */
+        res.status(201).json(productQuery)
     } catch (error) {
         console.log(error)
         res.status(501).json({
@@ -42,24 +47,57 @@ exports.listProduct = async (req, res, next) => {
 
 }
 
-exports.updateProduct = async (req, res, next) => {
+exports.deleteProduct = async (req, res, next) => {
     const docId = req.params.id
-    const newName = req.body.name
-    const newCategory = req.body.category
     try {
-        const doc = await Product.findById(docId)
-        doc.name = newName
-        doc.category = newCategory
-        const response = await doc.save()
-
+        const response = await Product.deleteOne({_id: docId})
         res.status(201).json({
             response: response
         })
-
     } catch (error) {
         res.status(501).json({
             error: error,
             message: 'invalid id'
         })
     }
+}
+
+
+exports.getByIdProduct = async (req, res, next) => {
+    const docId = req.params.id
+    try {
+        const doc = await Product.findById(docId).populate('category').exec()
+        res.status(200).json(doc)
+    } catch (error) {
+        res.status(501).json({
+            error: error,
+            message: 'invalid id'
+        })
+    }
+
+}
+
+exports.updateProduct = async (req, res, next) => {
+    const docId = req.params.id
+    const newName = req.body.name
+    const newCategory = req.body.category
+    const newDescription = req.body.description
+    const newPrice = req.body.price
+    Product.findByIdAndUpdate(docId, {
+        name: newName,
+        category: newCategory,
+        description: newDescription,
+        price: newPrice
+    }, { new: true, omitUndefined: true },(error, result) => {
+        if(error){
+            res.status(501).json({
+                error: error,
+                message: 'update error'
+            })
+        } else {
+            res.status(200).json({
+                response: result
+            })
+        }
+    })
 }

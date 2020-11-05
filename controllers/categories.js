@@ -80,6 +80,4 @@ exports.getByIdCategory = async (req, res, next) => {
             message: 'invalid id'
         })
     }
-
-
 }
