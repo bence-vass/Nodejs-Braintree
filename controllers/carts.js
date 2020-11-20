@@ -20,14 +20,13 @@ exports.createNewCart = (req, res, next) => {
 
 exports.listCart = async (req, res, next) => {
     const cartQuery = await Cart.find({})
-        //.populate('items.product')
-        .populate({
-            path: 'items.product',
-            populate: {
-                path: 'category',
-                model: 'Category'
-            }
-        })
+        // .populate({
+        //     path: 'items.product',
+        //     populate: {
+        //         path: 'category',
+        //         model: 'Category'
+        //     }
+        // })
         .exec()
     const cartList = cartQuery
     res.status(201).json({
