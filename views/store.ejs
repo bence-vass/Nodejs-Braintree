@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <title>HOME</title>
+</head>
+<body>
+<h1>Store</h1>
+<button onclick="createCart()">createCart</button>
+<br>
+<input type="text" id="cartId-input" value="5fb97725a00fff440861e72a">
+<br>
+<button onclick="refreshCart($('#cartId-input').val())">refreshCart</button>
+<h2>Cart</h2>
+<div id="itemCount"></div>
+<div id="cartDiv"></div>
+
+<button onclick="addItem($('#cartId-input').val())">add a bag</button>
+
+</body>
+<script>
+    function getClientToken() {
+        $.ajax({
+            type: "POST",
+            url: 'payments/start'
+        }).then(res => {
+            console.log(res)
+            localStorage.setItem('braintreeClientToken', res.clientToken)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+    function createCart(){
+        $.ajax({
+            type: "POST",
+            url: 'carts/add',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({userId: 'user'}),
+        }).then(res => {
+            console.log(res)
+            console.log(res.cart._id)
+            $('#cartId-input').val(res.cart._id)
+
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+    function refreshCart(cartID){
+        $.ajax({
+            type: "GET",
+            url: "carts/" + cartID
+        }).then(res => {
+            console.log(res)
+            $('#cartDiv').text(JSON.stringify(res.items))
+            $('#itemCount').text('items: ' + res.items.length)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    function addItem(cartID, prodID="5fb520fc5dd0df1e44242e03"){
+        $.ajax({
+            type: "PATCH",
+            url: 'carts/update/'+cartID+'/add/'+prodID
+        }).then(res => {
+            console.log(res)
+            refreshCart(cartID)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+</script>
+
+</html>

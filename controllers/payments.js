@@ -12,19 +12,7 @@ const gateway = new braintree.BraintreeGateway({
 exports.startPayment = async (req, res, next) => {
     try{
         const clientTokenResponse = await gateway.clientToken.generate({})
-        let payment = new Payment({
-            userID: 'user1',
-            orderID: '5fb54f941e6f983bcca7cee4',
-            gateway: 'braintree',
-            clientToken: clientTokenResponse.clientToken,
-            status: "INITIALIZE"
-        })
-        try{
-            let response = await payment.save()
-            res.status(200).json({status: 'success', clientToken: clientTokenResponse.clientToken})
-        } catch (dbError) {
-            res.status(200).json({status: 'error', response: dbError})
-        }
+        res.status(200).json({status: 'success', clientToken: clientTokenResponse.clientToken})
     } catch (tokenError) {
         res.status(200).json({status: 'error', response: tokenError})
     }

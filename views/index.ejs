@@ -1,16 +1,79 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <!-- includes the Braintree JS client SDK -->
-    <script src="https://js.braintreegateway.com/web/dropin/1.24.0/js/dropin.min.js"></script>
-
-    <!-- includes jQuery -->
+<head>
+    <meta charset="utf-8">
+    <script src="https://js.braintreegateway.com/web/3.69.0/js/client.min.js"></script>
+    <script src="https://js.braintreegateway.com/web/3.69.0/js/hosted-fields.min.js"></script>
     <script src="http://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
-  </head>s
-  <body>
+    <title>HOME</title>
+</head>
+<body>
+<button onclick="getClientToken()">get token</button>
+<button onclick="initializePayment()">initialize</button>
+<form action="/" id="my-sample-form" method="post">
+    <label for="card-number">Card Number</label>
+    <div id="card-number"></div>
 
+    <label for="cvv">CVV</label>
+    <div id="cvv"></div>
 
-  </body>
+    <label for="expiration-date">Expiration Date</label>
+    <div id="expiration-date"></div>
+
+    <input type="submit" value="Pay" disabled/>
+</form>
+</body>
+<script>
+    function getClientToken() {
+        $.ajax({
+            type: "POST",
+            url: 'payments/start'
+        }).then(res => {
+            console.log(res)
+            localStorage.setItem('braintreeClientToken', res.clientToken)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    function createHostedFieldsCb(hostedFieldsErr, hostedFieldsInstance) {
+        if (hostedFieldsErr) {
+            console.error(hostedFieldsErr)
+            return null
+        }
+    }
+
+    function initializePayment() {
+        braintree.client.create({
+            authorization: localStorage.getItem('braintreeClientToken')
+        }, (clientErr, clientInstance) => {
+            if (clientErr) {
+                console.error(clientErr)
+                return null
+            } else {
+                console.log(clientInstance)
+            }
+            braintree.hostedFields.create({
+                client: clientInstance,
+                fields: {
+                    number: {
+                        container: '#card-number',
+                        prefill: '4111111111111111'
+                    },
+                    cvv: {
+                        container: '#cvv',
+                        placeholder: '•••',
+                        prefill: '123'
+
+                    },
+                    expirationDate: {
+                        container: '#expiration-date',
+                        prefill: '12/22'
+                    }
+                }
+            }, createHostedFieldsCb())
+        })
+    }
+</script>
+
 </html>
