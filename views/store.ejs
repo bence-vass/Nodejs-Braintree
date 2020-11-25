@@ -20,6 +20,21 @@
 
 </body>
 <script>
+    function createSession() {
+        $.ajax({
+            type: "POST",
+            url: 'users/create-user-session'
+        }).then(res => {
+            console.log(res)
+            localStorage.setItem('sessionID', res.sessionID)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+    function validateSession() {
+
+    }
+
     function getClientToken() {
         $.ajax({
             type: "POST",

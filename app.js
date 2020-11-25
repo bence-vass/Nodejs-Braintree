@@ -29,7 +29,7 @@ mongoose.connect(uri ,
 
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const usersRouter = require('./routes/users');
 const checkout = require('./routes/checkout');
 const productsRouter = require('./routes/products');
 const categoriesRouter = require('./routes/categories');
@@ -52,7 +52,7 @@ app.use(lessMiddleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-//app.use('/users', usersRouter);
+app.use('/users', usersRouter);
 app.use('/checkout', checkout);
 app.use('/products', productsRouter);
 app.use('/categories', categoriesRouter);
