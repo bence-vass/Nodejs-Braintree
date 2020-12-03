@@ -1,4 +1,5 @@
 const Product = require('../models/Product')
+const categoryUtils = require('../utils/product/category')
 
 exports.createNewProduct = (req, res, next) => {
     console.log(req.body)
@@ -100,4 +101,17 @@ exports.updateProduct = async (req, res, next) => {
             })
         }
     })
+}
+
+
+exports.createProductCategory = async (req, res, next) => {
+    const display = req.body.display
+    const slug = req.body.slug || null
+    const parent = req.body.parent || null
+    try{
+        let newCategory = await categoryUtils.createNewCategory(display, slug, parent)
+        res.status(200).json({newCategory})
+    } catch (e) {
+        res.status(400).json({error: e})
+    }
 }

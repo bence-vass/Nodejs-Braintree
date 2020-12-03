@@ -22,7 +22,7 @@ const sessionSchema = new mongoose.Schema({
                 return null
             } else {
                 // 60 seconds from now  === 60000
-                return new Date(new Date().valueOf() + 3600000);
+                return new Date(new Date().valueOf() + (1000 * 60 * 60));
             }
         }
     }

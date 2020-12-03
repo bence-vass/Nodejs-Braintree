@@ -10,4 +10,7 @@ router.post('/remove/:id', productController.deleteProduct)
 router.get('/:id', productController.getByIdProduct)
 
 
+router.post('/category/create', productController.createProductCategory)
+
+
 module.exports = router
