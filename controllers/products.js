@@ -1,5 +1,9 @@
-const Product = require('../models/Product')
+const {Product, ProductAttribute} = require('../models/Product')
 const categoryUtils = require('../utils/product/category')
+const DeserializeModel = require('../utils/serializer/deserializing')
+
+let attributeSerializer = new DeserializeModel(ProductAttribute)
+
 
 exports.createNewProduct = (req, res, next) => {
     console.log(req.body)
@@ -22,7 +26,6 @@ exports.createNewProduct = (req, res, next) => {
     })
 
 }
-
 exports.listProduct = async (req, res, next) => {
     try {
         const productQuery = await Product.find({}).populate('category').exec()
@@ -47,7 +50,6 @@ exports.listProduct = async (req, res, next) => {
     }
 
 }
-
 exports.deleteProduct = async (req, res, next) => {
     const docId = req.params.id
     try {
@@ -62,8 +64,6 @@ exports.deleteProduct = async (req, res, next) => {
         })
     }
 }
-
-
 exports.getByIdProduct = async (req, res, next) => {
     const docId = req.params.id
     try {
@@ -77,7 +77,6 @@ exports.getByIdProduct = async (req, res, next) => {
     }
 
 }
-
 exports.updateProduct = async (req, res, next) => {
     const docId = req.params.id
     const newName = req.body.name
@@ -102,8 +101,6 @@ exports.updateProduct = async (req, res, next) => {
         }
     })
 }
-
-
 exports.createProductCategory = async (req, res, next) => {
     const display = req.body.display
     const slug = req.body.slug || null
@@ -114,4 +111,17 @@ exports.createProductCategory = async (req, res, next) => {
     } catch (e) {
         res.status(400).json({error: e})
     }
+}
+exports.navbarListCategory = async (req, res, next) => {
+    try{
+        let categories = await categoryUtils.navbarCategoryList()
+        res.status(200).json({categories})
+    } catch (e) {
+        res.status(400).json({error: e})
+    }
+}
+
+exports.createProductAttribute = async (req,res,next) => {
+    await attributeSerializer.init(req,res,next)
+    return await attributeSerializer.create()
 }

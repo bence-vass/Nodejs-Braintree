@@ -3,10 +3,11 @@ const mongoose = require('mongoose')
 const productAttributeSchema = mongoose.Schema({
     display: {type: String, required: true},
     slug: {
-        type: String, default: () => {
+        type: String,
+        default: () => {
             return this.display
         },
-        unique: true
+        //unique: true
     }
 })
 
@@ -34,7 +35,6 @@ const productCategorySchema = mongoose.Schema({
     slug: {
         type: String,
         default: () => {
-            console.log(this.display)
             return this.display
         },
 
