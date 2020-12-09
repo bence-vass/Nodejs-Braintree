@@ -1,6 +1,5 @@
 const {User} = require('../models/User')
 const UserRegister = require('../utils/user/register')
-const {} = require("../utils/user/validation");
 let createError = require('http-errors');
 const {decodeAccessToken, decodeRefreshToken, InputErrorMsg} = require("../utils/user/validation");
 

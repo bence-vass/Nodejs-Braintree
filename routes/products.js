@@ -17,6 +17,9 @@ router.post('/category/navbar', productController.navbarListCategory)
 
 
 router.post('/attribute/create', productController.createProductAttribute)
+router.post('/attribute/delete/:documentId', productController.deleteProductAttribute)
+router.post('/attribute/find/:documentId', productController.findOne)
+router.post('/attribute/update/:documentId', productController.updateOne)
 //router.post('/attribute/list', productController)
 
 
