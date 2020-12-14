@@ -1,10 +1,11 @@
 const {Product, ProductAttribute} = require('../models/Product')
 const categoryUtils = require('../utils/product/category')
-const DeserializeModel = require('../utils/serializer/deserializing')
+const ModelDeserializer = require('../utils/serializer/deserializing')
+const ModelSerializer = require('../utils/serializer/serializer')
 
 
 
-exports.createNewProduct = (req, res, next) => {
+exports.createNewProduct = (req, res) => {
     console.log(req.body)
     const product = new Product({
         name: req.body.name,
@@ -25,7 +26,7 @@ exports.createNewProduct = (req, res, next) => {
     })
 
 }
-exports.listProduct = async (req, res, next) => {
+exports.listProduct = async (req, res) => {
     try {
         const productQuery = await Product.find({}).populate('category').exec()
         /*
@@ -49,7 +50,7 @@ exports.listProduct = async (req, res, next) => {
     }
 
 }
-exports.deleteProduct = async (req, res, next) => {
+exports.deleteProduct = async (req, res) => {
     const docId = req.params.id
     try {
         const response = await Product.deleteOne({_id: docId})
@@ -63,7 +64,7 @@ exports.deleteProduct = async (req, res, next) => {
         })
     }
 }
-exports.getByIdProduct = async (req, res, next) => {
+exports.getByIdProduct = async (req, res) => {
     const docId = req.params.id
     try {
         const doc = await Product.findById(docId).populate('category').exec()
@@ -76,7 +77,7 @@ exports.getByIdProduct = async (req, res, next) => {
     }
 
 }
-exports.updateProduct = async (req, res, next) => {
+exports.updateProduct = async (req, res) => {
     const docId = req.params.id
     const newName = req.body.name
     const newCategory = req.body.category
@@ -100,7 +101,7 @@ exports.updateProduct = async (req, res, next) => {
         }
     })
 }
-exports.createProductCategory = async (req, res, next) => {
+exports.createProductCategory = async (req, res) => {
     const display = req.body.display
     const slug = req.body.slug || null
     const parent = req.body.parent || null
@@ -111,7 +112,7 @@ exports.createProductCategory = async (req, res, next) => {
         res.status(400).json({error: e})
     }
 }
-exports.navbarListCategory = async (req, res, next) => {
+exports.navbarListCategory = async (req, res) => {
     try{
         let categories = await categoryUtils.navbarCategoryList()
         res.status(200).json({categories})
@@ -120,37 +121,27 @@ exports.navbarListCategory = async (req, res, next) => {
     }
 }
 
-exports.createProductAttribute = async (req,res,next) => {
-    let attributeSerializer = new DeserializeModel(ProductAttribute)
-    await attributeSerializer.init(req,res,next)
+exports.createProductAttribute = async (req,res) => {
+    let attributeSerializer = new ModelSerializer(ProductAttribute)
+    await attributeSerializer.init(req,res)
     return await attributeSerializer.create()
 }
-
 exports.deleteProductAttribute = async (req, res, next) => {
     const docID = req.params.documentId || null
-    let attributeSerializer = new DeserializeModel(ProductAttribute)
+    let attributeSerializer = new ModelSerializer(ProductAttribute)
     await attributeSerializer.init(req, res, next)
     return await attributeSerializer.delete(docID)
 }
-
-exports.findOne = async (req, res, next) => {
-    try{
-        const docID = req.params.documentId || null
-        console.log(docID)
-        let attrDoc = await ProductAttribute.findById(docID)
-        res.status(200).json(attrDoc)
-    } catch (e) {
-        console.log(e)
-        res.status(500).json(e)
-
-    }
-
+exports.findOneProductAttribute = async (req, res) => {
+    const docID = req.params.documentId || null
+    let attributeSerializer = new ModelDeserializer(ProductAttribute)
+    await attributeSerializer.init(req, res)
+    return await attributeSerializer.findByID(docID)
 }
-
-exports.updateOne = async (req, res, next) => {
+exports.updateOneProductAttribute = async (req, res, next) => {
     const docID = req.params.documentId || null
     const newData = req.body || null
-    let attributeSerializer = new DeserializeModel(ProductAttribute)
+    let attributeSerializer = new ModelSerializer(ProductAttribute)
     await attributeSerializer.init(req, res, next)
     return await attributeSerializer.updateByID(docID, newData)
 }
