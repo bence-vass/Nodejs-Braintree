@@ -38,7 +38,7 @@ describe('CRUDL Class test', () => {
 
         })
         test('WITH functionsIncluded', () => {
-            let includedFns= ['LIST', 'CREATE']
+            let includedFns = ['LIST', 'CREATE']
             let view = new ModelView(
                 ProductAttribute,
                 'urlString',
@@ -60,7 +60,7 @@ describe('CRUDL Class test', () => {
             }).toThrow('Invalid include functions')
         })
         test('WITH functionsExcluded', () => {
-            let includedFns= ['LIST', 'CREATE']
+            let includedFns = ['LIST', 'CREATE']
             let view = new ModelView(
                 ProductAttribute,
                 'urlString',
@@ -84,7 +84,39 @@ describe('CRUDL Class test', () => {
         })
     })
 
-    describe('Test: setEnabledFunctions', ()=>{
+    describe('Test: setEnabledFunctions', () => {
+        const setEnabledFn = ModelView.setEnabledFunctions
+        const validIncludes = ["CREATE", "READ"]
+        const invalidIncludes = ["CREATE", "APPLE"]
+        const validExcludes = ["UPDATE", "DELETE"]
+        const invalidExcludes = ["LIST", "ORANGE"]
+        test('WITH functionsIncluded AND functionsExcluded', () => {
+            expect(() => {
+                setEnabledFn(validIncludes, validExcludes)
+            }).toThrow('Include and exclude can not be parameters at the sametime')
+        })
+        test('WITH functionsIncluded AND functionsExcluded are both set to null', () => {
+            expect(() => {
+                setEnabledFn(null, null)
+            }).toThrow('Give at least one valid parameter')
+        })
+        test('WITH functionsIncluded', () => {
+            expect(setEnabledFn(validIncludes, null)).toBe(validIncludes)
+        })
+        test('WITH invalid functionsIncluded', () => {
+            expect(() => {
+                setEnabledFn(invalidIncludes, null)
+            }).toThrow('Invalid include functions')
+        })
+        test('WITH functionsExcluded', () => {
+            expect(setEnabledFn(null, validExcludes)).toBe(validExcludes)
+        })
+        test('WITH invalid functionsExcluded', () => {
+            expect(()=>{
+                setEnabledFn(null, invalidExcludes)
+            }).toThrow('Invalid exclude functions')
+        })
+
 
     })
 
