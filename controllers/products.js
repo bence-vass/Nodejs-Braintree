@@ -1,6 +1,6 @@
 const {Product, ProductAttribute} = require('../models/Product')
 const categoryUtils = require('../utils/product/category')
-const ModelDeserializer = require('../utils/serializer/deserializing')
+const ModelDeserializer = require('../utils/serializer/deserializer')
 const ModelSerializer = require('../utils/serializer/serializer')
 
 

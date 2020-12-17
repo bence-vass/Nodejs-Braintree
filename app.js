@@ -5,28 +5,8 @@ var cookieParser = require('cookie-parser');
 var lessMiddleware = require('less-middleware');
 var logger = require('morgan');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose')
-
+const mongoose =  require('./mongooseConnect')
 require('dotenv').config({path: '.env.development'})
-
-const uri =
-    'mongodb+srv://' +
-    process.env.MONGO_ATLAS_USER +
-    ':' +
-    process.env.MONGO_ATLAS_PW +
-    '@cluster0.mboj5.mongodb.net/' +
-    process.env.MONGO_ATLAS_CLUSTER +
-    '?retryWrites=true&w=majority'
-
-mongoose.connect(uri ,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useCreateIndex: true,
-        useFindAndModify: false
-    }
-)
-
 
 var indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');

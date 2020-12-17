@@ -4,7 +4,9 @@ class ModelSerializer extends Serialzier {
     async create(){
         try{
             let body = this.req.body
+            console.log(body)
             let doc = new this.model(body)
+            console.log(doc)
             await doc.save()
             this.res.status(200).json(doc)
         } catch (e) {
