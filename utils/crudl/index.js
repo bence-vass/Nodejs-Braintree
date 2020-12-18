@@ -56,12 +56,19 @@ class CRUDL {
 
     updateView(){
         return this.router.post(this.urlString+'/:documentID/update', async (req, res, next) => {
-
+            const docID = req.params.documentId || null
+            const newData = req.body || null
+            let serializer = new ModelSerializer(this.dbModel)
+            await serializer.init(req, res, next)
+            await serializer.updateByID(docID, newData)
         })
     }
     deleteView(){
         return this.router.post(this.urlString+'/:documentID/delete', async (req, res, next) => {
-
+            const docID = req.params.documentId || null
+            let serializer = new ModelSerializer(this.dbModel)
+            await serializer.init(req, res, next)
+            await serializer.delete(docID)
         })
     }
     listView(){
