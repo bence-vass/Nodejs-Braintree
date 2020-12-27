@@ -1,6 +1,7 @@
 const CRUDL = require('../../../utils/crudl')
 const {ProductAttribute} = require('../../../models/Product')
 
+
 describe('CRUDL Class test', () => {
 
     describe('Test: setEnabledFunctions', () => {

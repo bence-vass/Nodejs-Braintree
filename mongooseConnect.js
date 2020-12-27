@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
-require('dotenv').config({path: '.env.development'})
+
+if(process.env.NODE_ENV === 'test'){
+    require('dotenv').config({path: '.env.test'})
+}
+if(process.env.NODE_ENV === undefined || process.env.NODE_ENV === 'dev'){
+    require('dotenv').config({path: '.env.development'})
+}
 
 //mongoose.Promise = global.Promise;
 const uri =

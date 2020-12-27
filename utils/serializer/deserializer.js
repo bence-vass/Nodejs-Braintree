@@ -4,9 +4,17 @@ class ModelDeserializer extends Serializer {
 
     async findByID(docID){
         try{
-            console.log(docID)
             let doc = await this.model.findById(docID)
-            this.res.status(500).json(doc)
+            this.res.status(200).json(doc)
+        } catch (e) {
+            this.res.status(500).json({error: e})
+        }
+    }
+
+    async listCollection(){
+        try{
+            let docs = await this.model.find({})
+            this.res.status(200).json(docs)
         } catch (e) {
             this.res.status(500).json({error: e})
         }
