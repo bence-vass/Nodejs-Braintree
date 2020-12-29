@@ -24,5 +24,6 @@ router.post('/attribute/update/:documentId', productController.updateOneProductA
 //router.post('/attribute/list', productController)
 let AttribureView = new CRUDL(ProductAttribute, router,'/attr')
 AttribureView.createView()
+AttribureView.listView()
 
 module.exports = router

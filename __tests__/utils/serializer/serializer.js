@@ -41,7 +41,13 @@ describe('Serializer Test', () => {
     })
     describe('Integration Tests', () => {
         beforeAll(() => {
-            mongoose.connection.dropCollection(ProductAttribute.collection.collectionName)
+            try{
+                mongoose.connection.dropCollection(ProductAttribute.collection.collectionName)
+                console.log('collection dropped')
+            } catch (e) {
+                console.log('could not drop collection')
+                //console.error(e)
+            }
         })
         afterAll(() => {
             mongoose.connection.close()
@@ -145,7 +151,13 @@ describe('Serializer Test', () => {
             })
             test('List collection', async done => {
                 // IMPORTANT not to be interrupted by other tests, it compares the whole response with the created ones
-                await mongoose.connection.dropCollection(ProductAttribute.collection.collectionName)
+                try{
+                    await mongoose.connection.dropCollection(ProductAttribute.collection.collectionName)
+                    console.log('collection dropped')
+                } catch (e) {
+                    console.log('could not drop collection')
+                    //console.error(e)
+                }
 
                 let collectionLength = 10
                 let createdDocs = []

@@ -47,16 +47,16 @@ class CRUDL {
             await serializer.create()
         })
     }
-
-    readView(){
-        return this.router.post(this.urlString+'/:documentID', async (req, res, next) => {
-
+    listView(){
+        return this.router.post(this.urlString+'/list', async (req, res, next) => {
+            let deserializer = new ModelDeserializer(this.dbModel)
+            await deserializer.init(req, res, next)
+            await deserializer.listCollection()
         })
     }
-
     updateView(){
         return this.router.post(this.urlString+'/:documentID/update', async (req, res, next) => {
-            const docID = req.params.documentId || null
+            const docID = req.params.documentID || null
             const newData = req.body || null
             let serializer = new ModelSerializer(this.dbModel)
             await serializer.init(req, res, next)
@@ -65,15 +65,18 @@ class CRUDL {
     }
     deleteView(){
         return this.router.post(this.urlString+'/:documentID/delete', async (req, res, next) => {
-            const docID = req.params.documentId || null
+            const docID = req.params.documentID || null
             let serializer = new ModelSerializer(this.dbModel)
             await serializer.init(req, res, next)
             await serializer.delete(docID)
         })
     }
-    listView(){
-        return this.router.post(this.urlString+'/list', async (req, res, next) => {
-
+    readView(){
+        return this.router.post(this.urlString+'/:documentID', async (req, res, next) => {
+            const docID = req.params.documentID || null
+            let deserializer = new ModelDeserializer(this.dbModel)
+            await deserializer.init(req, res, next)
+            await deserializer.findByID(docID)
         })
     }
 

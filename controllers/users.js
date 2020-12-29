@@ -31,10 +31,10 @@ exports.createSession = async (req, res, next) => {
     return thrown Error
  */
 exports.registerUser = async (req, res, next) => {
-    InputErrorMsg(req, res)
-    const email = req.body.email
-    const password = req.body.password
     try{
+        InputErrorMsg(req, res, next)
+        const email = req.body.email
+        const password = req.body.password
         let user = await UserRegister.createUser(email, password)
         console.log(user)
         res.status(200).json({status: 'success',  userID: user.id})
@@ -46,10 +46,10 @@ exports.registerUser = async (req, res, next) => {
 
 }
 exports.loginUser = async (req, res, next) => {
-    InputErrorMsg(req, res)
-    const email = req.body.email
-    const password = req.body.password
     try{
+        InputErrorMsg(req, res)
+        const email = req.body.email
+        const password = req.body.password
         let [accessToken, refreshToken] = await UserRegister.loginUser(email, password)
         res.status(200).json({status: 'success',  accessToken: accessToken, refreshToken: refreshToken})
     } catch (error) {
@@ -88,10 +88,10 @@ exports.refreshAccessToken = async (req, res, next) => {
 
 
 exports.revokeRefreshToken = async (req, res, next) => {
-    InputErrorMsg(req, res)
-    const queryField = req.body.field
-    const queryValue = req.body.value
     try{
+        InputErrorMsg(req, res)
+        const queryField = req.body.field
+        const queryValue = req.body.value
         let result = await UserRegister.revokeRefreshToken(queryValue, queryField)
         res.status(200).json({result})
     } catch (revokeError) {

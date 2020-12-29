@@ -1,0 +1,40 @@
+<head>
+    <meta charset="utf-8">
+    <script src="http://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+    <script src="/scripts/authentication.js"></script>
+
+    <title>Register</title>
+</head>
+<body>
+
+<h1>Register</h1>
+<form onsubmit="register(); return false">
+    <label for="fname">First name:</label><br>
+    <input type="text" id="username" name="fname" value="user1@asd.asd"><br>
+    <label for="lname">Last name:</label><br>
+    <input type="text" id="password" name="lname" value="passw123"><br><br>
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+
+
+    function register() {
+        let username = $('#username').val()
+        let password = $('#password').val()
+        userRegister(username, password).then(res => {
+
+            userLogin(username, password).then(res => {
+                console.log(res)
+                window.location.href = '/users/dashboard/profile'
+            }).catch(({status, responseJSON}) => {
+                console.error(responseJSON)
+            })
+
+        }).catch(({status, responseJSON}) => {
+            console.error(responseJSON)
+        })
+    }
+
+</script>
+</body>

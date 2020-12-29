@@ -10,6 +10,7 @@ class Serializer {
         this.res = res
         this.next = next || null
     }
+
 }
 
 module.exports = Serializer

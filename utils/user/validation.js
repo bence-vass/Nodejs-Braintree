@@ -1,16 +1,16 @@
 const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 
-exports.InputErrorMsg = (req, res) => {
+exports.InputErrorMsg = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({status: 'error', error: errors.array() });
+        throw errors.array()
     }
 }
 
 exports.decodeAccessToken = async function (token) {
-    return await jwt.verify(token, process.env.JWT_ACCESS_PRIVATE_KEY)
+    return await jwt.verify(token, process.env.privateKey)
 }
 exports.decodeRefreshToken = async function (token) {
-    return await jwt.verify(token, process.env.JWT_REFRESH_PRIVATE_KEY)
+    return await jwt.verify(token, process.env.privateKey)
 }

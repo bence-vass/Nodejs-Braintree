@@ -40,11 +40,11 @@ email: !<emailAddress>
  * @return {Object} User
  */
 exports.createUser = async function (email, password) {
-    let user = new User({
-        email: email,
-        password: password,
-    })
     try {
+        let user = new User({
+            email: email,
+            password: password,
+        })
         await user.save()
         return user
     } catch (error) {
@@ -115,7 +115,7 @@ exports.revokeUsersTokens = async function (userID) {
     try {
         return await RefreshToken.deleteMany({user: userID})
     } catch (error) {
-        throw error
+        return error
     }
 }
 exports.generateRefreshToken = async function (user) {
@@ -124,7 +124,7 @@ exports.generateRefreshToken = async function (user) {
             sub: user.id,
             exp: Math.floor(Date.now() / 1000) + (60 * 25),
         }
-        let refreshToken = await jwt.sign(refreshTokenPayload, process.env.JWT_REFRESH_PRIVATE_KEY)
+        let refreshToken = await jwt.sign(refreshTokenPayload, process.env.privateKey)
         return await new RefreshToken({
             token: refreshToken,
             user: user.id
@@ -142,8 +142,10 @@ exports.generateAccessToken = async function (user) {
             role: user.role,
             exp: Math.floor(Date.now() / 1000) + (60 * 20),
         }
-        return await jwt.sign(accessTokenPayload, process.env.JWT_ACCESS_PRIVATE_KEY)
+        console.log(accessTokenPayload)
+        return await jwt.sign(accessTokenPayload, process.env.privateKey)
     } catch (error) {
+        console.log(error)
         throw error
     }
 
