@@ -33,7 +33,7 @@ sessionSchema.index({expireAt: 1}, {expireAfterSeconds: 0});
 const refreshTokenSchema = new mongoose.Schema({
     token: {type: String, required: true},
     user: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-    expireAt: {type: Date, default: new Date(new Date().valueOf() + (1000 * 60 * 5))},
+    expireAt: {type: Date, default: new Date(new Date().valueOf() + (1000 * 60 * 60))},
 }, {timestamps: true})
 refreshTokenSchema.index({expireAt: 1}, {expireAfterSeconds: 0});
 

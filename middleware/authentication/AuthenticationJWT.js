@@ -2,13 +2,22 @@ const jwt = require('jsonwebtoken')
 const {decodeAccessToken} = require("../../utils/user/validation");
 const {User} = require('../../models/User')
 
+
+module.exports.isAnonymous = async (req, res, next, authToken=req.headers.authorization) => {
+    try{
+        let decoded = await decodeAccessToken(authToken)
+        res.redirect('profile')
+    } catch (e) {
+        next()
+    }
+}
+
 module.exports.isAuthenticated = async (req, res, next, authToken=req.headers.authorization) => {
     try {
         let decoded = await decodeAccessToken(authToken)
-        console.log(decoded)
         next()
     } catch (authError) {
-        //res.status(401).json({status: 'error', authError});
+        res.status(401).json({status: 'error', authError});
         res.redirect('login')
     }
 }
@@ -33,10 +42,9 @@ module.exports.isUserOwner = async (req, res, next) => {
     }
 }
 
-module.exports.isAdmin = async (req, res, next) => {
+module.exports.isAdmin = async (req, res, next, authToken=req.headers.authorization) => {
     try {
-        const token = req.headers.authorization
-        let decoded = await decodeAccessToken(token)
+        let decoded = await decodeAccessToken(authToken)
         if(decoded.role === 'ADMIN'){
             next()
         } else {
@@ -44,5 +52,7 @@ module.exports.isAdmin = async (req, res, next) => {
         }
     } catch (authError) {
         res.status(401).json({status: 'error', authError});
+        //res.redirect('login')
+
     }
 }

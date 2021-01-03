@@ -1,6 +1,7 @@
 const {User} = require('../models/User')
 const UserRegister = require('../utils/user/register')
 let createError = require('http-errors');
+const JwtAuthentication = require("../utils/authentication/jwtAuthentication");
 const {decodeAccessToken, decodeRefreshToken, InputErrorMsg} = require("../utils/user/validation");
 
 
@@ -47,13 +48,15 @@ exports.registerUser = async (req, res, next) => {
 }
 exports.loginUser = async (req, res, next) => {
     try{
+        let jwtAuth = await new JwtAuthentication()
+
         InputErrorMsg(req, res)
         const email = req.body.email
         const password = req.body.password
         let [accessToken, refreshToken] = await UserRegister.loginUser(email, password)
         res.status(200).json({status: 'success',  accessToken: accessToken, refreshToken: refreshToken})
     } catch (error) {
-        res.status(400).json({status: 'error',  error: "Invalid credentials"})
+        res.status(400).json({status: 'error',  text: "Invalid credentials", error})
     }
 }
 exports.accessTokenVerification = async (req, res, next) => {
